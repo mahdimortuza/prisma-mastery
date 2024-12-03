@@ -17,6 +17,7 @@ datasource db {
   author User @relation(fields: [authorId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  postCategory PostCategory[]
 
   @@map("posts")
  }
@@ -26,7 +27,8 @@ datasource db {
   id Int @id @default(autoincrement())
   username String @unique
   email String
-  role UserRole
+  age Int @default(0)
+  role UserRole @default(user)
   profile Profile? //one ot one relation
   post Post[] //  many to one relation
 
@@ -45,10 +47,21 @@ datasource db {
  model Category {
   id Int @id @default(autoincrement())
   name String
+  postCategory PostCategory[]
 
   @@map("categories")
  }
  
+ model PostCategory {
+  postId Int
+  post Post @relation(fields: [postId], references: [id])
+
+  categoryId Int
+  category Category @relation(fields: [categoryId], references: [id])
+
+  @@id([postId, categoryId])
+  @@map("post_category")
+ }
  
   enum UserRole {
   user
